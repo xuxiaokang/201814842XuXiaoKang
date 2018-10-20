@@ -3,6 +3,11 @@
 
 import os
 import nltk
+from nltk.stem import PorterStemmer
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
 def read_file(path):
     file = open(path, "rb")
     content = file.read()
@@ -11,7 +16,7 @@ def read_file(path):
     return string
 
 def save_file(path ,content):
-    file = open(path, "wb")
+    file = open(path, "w")
     file.write(content)
     file.close()
 
@@ -20,14 +25,12 @@ def save_file(path ,content):
 dataPath = "D:/研一上/Data Mining/datamining/201814842XuXiaoKang/20news-18828/"
 #处理完的数据集
 preDataPath = "D:/研一上/Data Mining/datamining/201814842XuXiaoKang/preprocess-data/"
-#stopwords文件路径
-stopWordsPath = "D:/研一上/Data Mining/datamining/201814842XuXiaoKang/kNN/stopWords.txt"
-file = open(stopWordsPath, "r")
-lines = file.readlines()
-for line in lines:
-    print(line.strip())
-    
-    
+
+tokenizer = RegexpTokenizer(r'\w+')
+stemmer = PorterStemmer()
+stopWords = set(stopwords.words('english'))
+
+print(stopWords)
 
 dirList = os.listdir(dataPath)
 for dirPath in dirList:
@@ -39,14 +42,22 @@ for dirPath in dirList:
     filePathList = os.listdir(classPath)
     for fileName in filePathList:
         path = classPath+fileName
+        
         content = read_file(path).strip()
+        content = content.lower()
+        
         #用nltk先将文本拆分成句子，然后对句子进行分词
-        sentences = nltk.sent_tokenize(content)
-        words = []
-        for sentence in sentences:
-            words.append(nltk.word_tokenize(sentence))
-        content = ' '.join(('%s' %id for id in words))
-        #删除停用词标点符号等
+        #sentences = nltk.sent_tokenize(content)
+        #words = []
+        #for sentence in sentences:
+        #对句子分词
+        wordTokens = tokenizer.tokenize(content)
+        #stemmedTokens = [stemmer.stem(token) for token in wordTokens]
+        #stemmedTokens = map(stemmer.stem,wordTokens)
+        filteredWords = [w for w in wordTokens if not w in stopWords]
+        #words.append(filteredWords)
+        content = ' '.join(('%s' %id for id in filteredWords))
+        
         save_file(saveDir+fileName ,content)
         
 print("data preprocessing finished!")
