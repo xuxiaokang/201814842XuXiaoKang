@@ -55,9 +55,10 @@ for dirPath in dirList:
         #stemmedTokens = [stemmer.stem(token) for token in wordTokens]
         #stemmedTokens = map(stemmer.stem,wordTokens)
         filteredWords = [w for w in wordTokens if not w in stopWords]
+        filteredWords2 = [w for w in filteredWords if not w in ' \t1234567890abcdefghijklmnopqrstuvwxyz']
         #words.append(filteredWords)
-        content = ' '.join(('%s' %id for id in filteredWords))
-        
+        content = '\n'.join(('%s' %id for id in filteredWords2))
+        #lines = filter(lambda ch:ch not in ' \t1234567890abcdefghijklmnopqrstuvwxyz',content)
         save_file(saveDir+fileName ,content)
         
 print("data preprocessing finished!")
