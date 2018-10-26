@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Oct 21 08:48:14 2018
-计算文档的TFIDF
-构建字典
+构建字典，统计词频，筛选词频过低的单词
+划分数据集，将数据集划分为训练集和测试集
 @author: xuxiaokang
 """
 
