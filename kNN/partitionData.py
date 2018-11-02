@@ -29,7 +29,7 @@ def build_word_map():
             for line in open(fileDir).readlines():
                 word = line.strip('\n')
                 wordMap[word] = wordMap.get(word,0.0)+1.0
-    #筛选出出现次数大于5次的单词
+    #筛选出出现次数大于13次的单词
     for key,value in wordMap.items():
         if value > 13:
             newWordMap[key] = value
