@@ -31,6 +31,7 @@ preDataPath = "D:/研一上/Data Mining/datamining/201814842XuXiaoKang/preproces
 
 tokenizer = RegexpTokenizer(r'\w+')
 stemmer = PorterStemmer()
+#停用词
 stopWords = set(stopwords.words('english'))
 
 print(stopWords)
