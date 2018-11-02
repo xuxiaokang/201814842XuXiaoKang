@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Oct 26 10:06:25 2018
-计算tf-idf值
+先根据整个文件夹计算每个单词的idf值并保存
+然后在文件内计算单词的tf值与idf值相乘
 @author: xuxiaokang
 """
 
@@ -36,18 +37,18 @@ def computeIDF():
                 else:
                     wordMap.setdefault(word,set())
                     wordMap[word].add(newsList[j])
-    #保存tfidf值               
-    #wordIdfFile = open('D:/研一上/Data Mining/datamining/201814842XuXiaoKang/wordIdf.txt','w')
+    #保存idf值               
+    wordIdfFile = open('D:/研一上/Data Mining/datamining/201814842XuXiaoKang/wordIdf.txt','w')
     for word in wordMap.keys():
         wordDocNum = len(wordMap[word])
-        idf = log(docNum/wordDocNum)/log(10)
+        idf = log(docNum/(wordDocNum+1))/log(10)
         wordIdfMap[word] = idf
-        #wordIdfFile.write('%s %.6f\n' %(word,idf))
+        wordIdfFile.write('%s %.6f\n' %(word,idf))
     
-    #wordIdfFile.close()
+    wordIdfFile.close()
     print('word IDF finished!')
     return wordIdfMap
-#computeIDF()
+
 
 #根据划分好的数据集，计算tfidf值，并保存
 def computeTFIDF():
@@ -84,7 +85,8 @@ def computeTFIDF():
                 writer = testWriter
             else:
                 writer = trainWriter
-                
+            #将训练集和测试集每个文档的类别 文档名写入文件
+            #【类别 文档名 单词 tfidf】
             writer.write('%s %s '%(newsFilesList[i],newsList[j]))
             #计算每个单词的tf*idf值
             for word,num in wordTfMap.items():
@@ -95,5 +97,8 @@ def computeTFIDF():
     
     trainWriter.close()
     testWriter.close()
+#计算idf
+#computeIDF()
+#计算训练集和测试集的单词的tfidf并保存
 computeTFIDF()
     

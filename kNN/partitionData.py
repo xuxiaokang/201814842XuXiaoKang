@@ -2,14 +2,15 @@
 """
 Created on Sun Oct 21 08:48:14 2018
 构建字典，统计词频，筛选词频过低的单词
-划分数据集，将数据集划分为训练集和测试集
+对每个文件进行过滤，只保留在词典中的单词
+划分数据集，将数据集划分为训练集和测试集80%为训练集 20%为测试集
 @author: xuxiaokang
 """
 
 import os
-import math
 
-#读取每个文件，建立词典，并进行筛选，保留出现次数>13次的单词，写入文件中
+
+#读取每个文件，建立词典，并进行筛选，保留出现次数5次的单词，写入文件中
 def build_word_map():
     wordMap={}
     newWordMap={}
@@ -28,23 +29,28 @@ def build_word_map():
             for line in open(fileDir).readlines():
                 word = line.strip('\n')
                 wordMap[word] = wordMap.get(word,0.0)+1.0
-    #筛选出出现次数大于13次的单词
+    #筛选出出现次数大于5次的单词
     for key,value in wordMap.items():
         if value > 13:
             newWordMap[key] = value
     
     #將单词统计情况写入文件中
-    #wordMapFile = open('D:/研一上/Data Mining/datamining/201814842XuXiaoKang/wordDict.txt','w')
+    '''
+    wordMapFile = open('D:/研一上/Data Mining/datamining/201814842XuXiaoKang/wordDict.txt','w')
     
-    #wordCount = 0
-    #for key,value in newWordMap.items():
-        #wordMapFile.write('%s %.1f\n' % (key,value))
-        #wordCount+=1
-    #print('build word Map finished! size: %d' % wordCount)
+    wordCount = 0
+    for key,value in newWordMap.items():
+        wordMapFile.write('%s %.1f\n' % (key,value))
+        wordCount+=1
+    print('build word Map finished! size: %d' % wordCount)
+    '''
     #返回统计情况
     return newWordMap
 
-#对每个文件进行筛选，保留在字典中的单词，用以计算tfidf然后构建向量
+
+
+    
+#对每个文件进行筛选，保留出现在字典中的单词，用以计算tfidf然后构建向量
 def filter_file():
     wordMap= build_word_map()
     newsDir = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/preprocess-data'
@@ -67,8 +73,7 @@ def filter_file():
             file.close()
     print('filtering data finished!')
 
-#build_word_map()
-#filter_file()        
+        
     
 #按80%为训练数据集，20%为测试数据集划分数据集
 def partition_data(index,category,proportion=0.8):
@@ -106,12 +111,18 @@ def partition_data(index,category,proportion=0.8):
             
             targetW.close()
     cateFile.close()
+    
+    
+#建词典，统计词频，筛选
+#build_word_map()
+#对着词典过滤文件中词频过小的单词
+#filter_file()
+#划分数据集，执行五次 
 
-#划分数据集，执行五次   
-#for i in range(5):
-    #cateFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/category'+str(i)+'.txt'
-    #partition_data(i,cateFile)
-#print('partition data finished!')
+for i in range(5):
+    cateFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/category'+str(i)+'.txt'
+    partition_data(i,cateFile)
+print('partition data finished!')
     
 
         

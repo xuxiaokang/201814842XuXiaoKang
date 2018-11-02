@@ -1,6 +1,9 @@
 #对数据集进行预处理（剔除HTML标签、分词、去掉stopwords）
 # _*_ coding: utf-8 _*_
-
+'''
+进行数据预处理
+去掉停用词，字母，数字，标点等
+'''
 import os
 import nltk
 from nltk.stem import PorterStemmer
@@ -56,7 +59,9 @@ for dirPath in dirList:
         #去掉数字
         filteredWords3 = [w for w in filteredWords2 if not str(w).isdigit()]
         
-        content = '\n'.join(('%s' %id for id in filteredWords3))
+        filteredWords4 = [w for w in filteredWords3 if len(w)>2]
+        
+        content = '\n'.join(('%s' %id for id in filteredWords4))
         save_file(saveDir+fileName ,content)
         
 print("data preprocessing finished!")
