@@ -42,26 +42,21 @@ for dirPath in dirList:
     filePathList = os.listdir(classPath)
     for fileName in filePathList:
         path = classPath+fileName
-        
+
         content = read_file(path).strip()
         content = content.lower()
-        
-        #用nltk先将文本拆分成句子，然后对句子进行分词
-        #sentences = nltk.sent_tokenize(content)
-        #words = []
-        #for sentence in sentences:
+    
         #对句子分词
         wordTokens = tokenizer.tokenize(content)
-        #stemmedTokens = [stemmer.stem(token) for token in wordTokens]
-        #stemmedTokens = map(stemmer.stem,wordTokens)
-        
+
         #去掉数字和单个字符
         filteredWords = [w for w in wordTokens if not w in stopWords]
+        #去掉单个数字和字符
         filteredWords2 = [w for w in filteredWords if not w in ' \t1234567890abcdefghijklmnopqrstuvwxyz']
+        #去掉数字
         filteredWords3 = [w for w in filteredWords2 if not str(w).isdigit()]
-        #words.append(filteredWords)
+        
         content = '\n'.join(('%s' %id for id in filteredWords3))
-        #lines = filter(lambda ch:ch not in ' \t1234567890abcdefghijklmnopqrstuvwxyz',content)
         save_file(saveDir+fileName ,content)
         
 print("data preprocessing finished!")
