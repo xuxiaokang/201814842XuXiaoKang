@@ -4,6 +4,7 @@ Created on Fri Oct 26 14:54:49 2018
 knn算法实现
 以cosine相似度计算两个文档之间的相似度
 然后取出相似度排名前k个计算当前文档的类别
+计算测试集的预测分类与原始分类相比，计算分类准确率
 @author: xuxiaokang
 """
 
@@ -28,7 +29,11 @@ def compute_similarity(trainData,testData):
     
     return consin
 #寻找k个邻居，计算分类
-def classify(k,cate,test,trainMap):
+'''
+test测试文档
+trainMap训练文档集
+'''
+def classify(k,test,trainMap):
     simMap = {}
     for item in trainMap.items():
         sim = compute_similarity(item[1],test)
@@ -37,11 +42,12 @@ def classify(k,cate,test,trainMap):
     sortedSimMap = sorted(simMap.items(),key=operator.itemgetter(1),reverse=True)
     
     cateSimMap = {}
-    '''
+  
     for i in range(k):
         cate = sortedSimMap[i][0].split('_')[0]
         cateSimMap[cate] = cateSimMap.get(cate,0)+sortedSimMap[i][1]
     sortedCateSimMap = sorted(cateSimMap.items(),key=operator.itemgetter(1),reverse=True)
+  
     '''
     for i in range(k):
         cate = sortedSimMap[i][0].split('_')[0]
@@ -52,8 +58,8 @@ def classify(k,cate,test,trainMap):
         if count>maxCount:
             maxCount = count
             classes = cate
-    
-    return classes
+    '''
+    return sortedCateSimMap[0][0]
 
 
 def test():
@@ -94,7 +100,7 @@ def test():
     for item in testWordMap.items():
         #k=7
         
-        predictClass = classify(20,item[0],item[1],trainWordMap)
+        predictClass = classify(20,item[1],trainWordMap)
         num+=1
         originalClass = item[0].split('_')[0]
         resultWriter.write('%s %s\n'%(originalClass,predictClass))
