@@ -11,20 +11,21 @@ knn算法实现
 from numpy import linalg
 from numpy import mat
 import operator
-
-#计算训练向量和测试向量之间的相似性，用余弦值表示
+'''
+计算训练向量和测试向量之间的相似性，用余弦值表示
+trainData,当前的训练文档
+testData,当前的测试文档
+返回两个文档之间的相似性
+'''
 def compute_similarity(trainData,testData):
     train = []
-    test = [] 
-    
+    test = []    
     for word,tfidf in testData.items():
         if trainData.__contains__(word):
             train.append(float(trainData[word]))
-            test.append(float(tfidf))
-            
+            test.append(float(tfidf))   
     trainV = mat(train)
-    testV = mat(test)
-    
+    testV = mat(test)   
     consin = float(testV*trainV.T) / (1.0+float(linalg.norm(testV)*linalg.norm(trainV)))
     
     return consin
@@ -32,6 +33,7 @@ def compute_similarity(trainData,testData):
 '''
 test测试文档
 trainMap训练文档集
+返回对当前文档的预测分类
 '''
 def classify(k,test,trainMap):
     simMap = {}
@@ -47,7 +49,7 @@ def classify(k,test,trainMap):
         cate = sortedSimMap[i][0].split('_')[0]
         cateSimMap[cate] = cateSimMap.get(cate,0)+sortedSimMap[i][1]
     sortedCateSimMap = sorted(cateSimMap.items(),key=operator.itemgetter(1),reverse=True)
-  
+    #排序之后统计每个类出现次数，返回出现次数最多的类别作为预测分类
     '''
     for i in range(k):
         cate = sortedSimMap[i][0].split('_')[0]
@@ -68,7 +70,6 @@ def test():
     resultFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/partition-data/test-0/result.txt'
     
     trainWordMap = {}
-    
     lines = open(trainFiles).readlines()
     for line in lines:
         trainDoc = line.strip('\n').split(' ')
@@ -77,7 +78,6 @@ def test():
         for i in range(2,l,2):
             #取出tfidf值
             trainTfIdf[trainDoc[i]] = trainDoc[i+1]
-        
         category = trainDoc[0]+'_'+trainDoc[1]
         trainWordMap[category] = trainTfIdf
     
@@ -93,25 +93,24 @@ def test():
         category = testDoc[0]+'_'+testDoc[1]
         testWordMap[category] = testTfIdf
     
-    num = 0
-    right = 0
+    num = 0 #总测试文档数目
+    right = 0 #预测正确的文档的数目
     resultWriter = open(resultFile,'w')
 
     for item in testWordMap.items():
-        #k=7
-        
-        predictClass = classify(20,item[1],trainWordMap)
+        #获取预测分类
+        predictClass = classify(30,item[1],trainWordMap)
         num+=1
         originalClass = item[0].split('_')[0]
         resultWriter.write('%s %s\n'%(originalClass,predictClass))
         print('%s %s\n'%(originalClass,predictClass))
         if originalClass == predictClass:
             right += 1
-            
-        
+              
     accuracy = float(right)/float(num)
     print('accuracy %.6f' % accuracy)
 #test()
+#根据预测结果分别统计每个类别的预测准确率
 def analyse():
     resultFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/partition-data/test-0/result.txt'
     analyseFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/partition-data/test-0/各类统计准确率.txt'
@@ -128,11 +127,10 @@ def analyse():
         allCount = allCount+1
         if ori_pre[0] == ori_pre[1]:
             count = count+1
-            
-    
         if pre == now:
             continue
         else:
+            #当前类别结束，计算当前类别的预测准确率，然后统计下一类别
             print('%s accuracy = %.6f'%(pre,float(count)/float(allCount)))
             writer.write('%s\t\taccuracy = %.6f'%(pre,float(count)/float(allCount)))
             writer.write('\n')
@@ -142,7 +140,7 @@ def analyse():
             print('\n')
         
     writer.close()
-analyse()
+#analyse()
     
                 
             
