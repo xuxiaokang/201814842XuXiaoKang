@@ -73,9 +73,9 @@ def partition_data(index,category,proportion=0.8):
             #在区间内的是训练文件
             if (j>begin) and (j<end):
                 cateFile.write('%s %s\n'%(newsList[j],newsFilesList[i]))
-                targetFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/naive_bayes-data/test-'+str(index)+'/'+newsFilesList[i]
+                targetFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/naive_bayes/test-'+str(index)+'/'+newsFilesList[i]
             else:
-                targetFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/naive_bayes-data/train-'+str(index)+'/'+newsFilesList[i]
+                targetFile = 'D:/研一上/Data Mining/datamining/201814842XuXiaoKang/naive_bayes/train-'+str(index)+'/'+newsFilesList[i]
             
             if os.path.exists(targetFile) == False:
                 os.makedirs(targetFile)
